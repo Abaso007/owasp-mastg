@@ -89,8 +89,8 @@ def write_header(ws, category_title, background_color="ffffff", font_color="0000
     ws.add_image(img, "B2")
 
     img = Image("Document/Images/OWASP_logo_white.png")
-    img.height = img.height * 0.15
-    img.width = img.width * 0.15
+    img.height *= 0.15
+    img.width *= 0.15
     ws.add_image(img, "F2")
 
     ws["C2"].value = "Mobile Application Security Checklist"
@@ -99,7 +99,10 @@ def write_header(ws, category_title, background_color="ffffff", font_color="0000
     ws["C3"].value = category_title
     ws["C3"].style = "medium_title"
 
-    ws["C5"].value = f'OWASP MASTG {MASTGVERSION} (commit: {MASTGCOMMIT})' + "    " + f'OWASP MASVS {MASVSVERSION} (commit: {MASVSCOMMIT})'
+    ws["C5"].value = (
+        f'OWASP MASTG {MASTGVERSION} (commit: {MASTGCOMMIT})    '
+        + f'OWASP MASVS {MASVSVERSION} (commit: {MASVSCOMMIT})'
+    )
     ws["C5"].font = Font(name=mas_styles.FONT, color="ffffff")
     ws["C5"].style = "versions_white"
 

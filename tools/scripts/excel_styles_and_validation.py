@@ -73,18 +73,14 @@ def create_style(params):
     if params.get("font"):
         style.font = Font(**params.get("font"))
     if params.get("border"):
-        sides_dict = {}
-        for key in params.get("border"):
-            sides_dict[key] = Side(**params.get("border")[key])
-
+        sides_dict = {
+            key: Side(**params.get("border")[key])
+            for key in params.get("border")
+        }
         style.border = Border(**sides_dict)
 
     alignment = params.get("alignment")
-    if alignment == "center":
-        style.alignment = align_center
-    else:
-        style.alignment = align_left
-
+    style.alignment = align_center if alignment == "center" else align_left
     if params.get("background"):
         style.fill = PatternFill("solid", fgColor=params.get("background"))
         # bd = Side(style="thick", color="FFFFFF")
