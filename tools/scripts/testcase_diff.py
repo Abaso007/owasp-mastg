@@ -23,9 +23,8 @@ def main():
         new_links = req.get("links")
 
         if old_links and new_links:
-            diff = list(set(new_links) - set(old_links))
             updated += 1
-            if diff:
+            if diff := list(set(new_links) - set(old_links)):
                 print(f"- [UPDATED] {mstg_id}:")
                 for link in diff:
                     print(f"  - {link}")

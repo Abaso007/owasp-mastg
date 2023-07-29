@@ -6,7 +6,7 @@ def append_tests_as_subsections():
     base_document_path = Path('Document')
     base_tests_path = Path('tests')
 
-    testing_chapters = [filename for filename in base_document_path.glob('0x0[56]*-Testing-*.md')]
+    testing_chapters = list(base_document_path.glob('0x0[56]*-Testing-*.md'))
     for testing_chapter_path in testing_chapters:
         with testing_chapter_path.open('r') as f:
             testing_chapter_content = f.read()

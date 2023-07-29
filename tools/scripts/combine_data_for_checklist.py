@@ -22,10 +22,11 @@ def get_masvs_groups():
     return groups
 
 def add_control_row(checklist, control):
-    checklist_row = {}
-    checklist_row['MASVS-ID'] = control['id']
-    checklist_row['path'] = f"/MASVS/controls/{os.path.basename(control['id'])}"
-    checklist_row['Platform'] = ""
+    checklist_row = {
+        'MASVS-ID': control['id'],
+        'path': f"/MASVS/controls/{os.path.basename(control['id'])}",
+        'Platform': "",
+    }
     checklist_row['Control / MASTG Test'] = control['statement']
     checklist_row['L1'] = ""
     checklist_row['L2'] = ""
@@ -33,18 +34,20 @@ def add_control_row(checklist, control):
     checklist.append(checklist_row)
 
 def add_test_rows(checklist, platform, control):
-    if platform in control['tests']:
-        for test in control['tests'][platform]:
-            levels = test['masvs_v1_levels']
-            checklist_row = {}
-            checklist_row['MASVS-ID'] = ""
-            checklist_row['path'] = f"/MASTG/{os.path.splitext(test['path'])[0]}"
-            checklist_row['Platform'] = test['platform']
-            checklist_row['Control / MASTG Test'] = test['title']
-            checklist_row['L1'] = "L1" in levels
-            checklist_row['L2'] = "L2" in levels
-            checklist_row['R'] = "R" in levels
-            checklist.append(checklist_row)
+    if platform not in control['tests']:
+        return
+    for test in control['tests'][platform]:
+        levels = test['masvs_v1_levels']
+        checklist_row = {
+            'MASVS-ID': "",
+            'path': f"/MASTG/{os.path.splitext(test['path'])[0]}",
+            'Platform': test['platform'],
+            'Control / MASTG Test': test['title'],
+            'L1': "L1" in levels,
+            'L2': "L2" in levels,
+            'R': "R" in levels,
+        }
+        checklist.append(checklist_row)
 
 def get_checklist_dict():
     masvs_v2 = retrieve_masvs()

@@ -17,15 +17,15 @@ class MarkdownLink:
 
 def extract_markdown_links(md_file_content: str) -> List[MarkdownLink]:
     md_links = []
-    
+
     for match in re.finditer(r'\[([^\]]+)\]\(([^ ")]+)(?: "([^"]+)")?\)', md_file_content):
         # raw is the full match
         raw = match.group(0)
         text = match.group(1)
         url = match.group(2)
         title = match.group(3).strip('"') if match.group(3) is not None else ""
-        external = True if url.startswith("http") else False
-        
+        external = bool(url.startswith("http"))
+
         raw_new = ""
         if not external:
             directory = ""
@@ -43,7 +43,7 @@ def extract_markdown_links(md_file_content: str) -> List[MarkdownLink]:
                 directory = "/MASTG/References/"
             else:
                 continue
-            
+
             if "Document/" in raw:
                 raw_new = re.sub(r"\.\./\.\./\.\./Document/", directory, raw)
             else:
@@ -51,7 +51,7 @@ def extract_markdown_links(md_file_content: str) -> List[MarkdownLink]:
                 if title != "":
                     full_url = f'{full_url} "{title}"'
                 raw_new = f"[{text}]({full_url})"
-            
+
             raw_new = re.sub(r"\.md", "", raw_new)
 
         md_links.append(MarkdownLink(raw, text, url, external, title, raw_new))
@@ -71,7 +71,7 @@ def transform(folder):
             files = Path(root).glob('*.md')
             for file in files:
                 file_text = file.read_text()
-                
+
                 links = extract_markdown_links(file_text)
                 # relative_path = file.relative_to(".").as_posix()
                 # links_dict[relative_path] = [link.__dict__ for link in links if link.external is False]
@@ -87,12 +87,12 @@ def transform(folder):
                         external_links.append(link.raw)
 
                 resources_section = ""
-                
-                if len(internal_links) > 0:
+
+                if internal_links:
                     internal_links = sorted(list(set(internal_links)))
                     # add - to each link
                     internal_links = [f"- {link}" for link in internal_links]
-                    
+
                     internal_links_text = "\n".join(internal_links)
                     internal_links_text = f"\n\n### Internal\n\n{internal_links_text}"
                     resources_section += internal_links_text
